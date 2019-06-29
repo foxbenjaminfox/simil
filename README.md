@@ -2,6 +2,12 @@
 
 `sim` is a CLI interface to [`spacy`](https://spacy.io)'s string similarity engine. It uses the `en_vectors_web_lg` dataset to compare strings for their English semantic similarity. Given two words, phrases, or sentences, `sim` will tell you how similar their meanings are.
 
+## Installation
+
+```bash
+$ pip3 install --user -U https://github.com/foxbenjaminfox/string-similarity-cli/releases/download/0.0.1/sim_cli-0.0.1-py3-none-any.whl
+```
+
 ## Usage:
 ```bash
 $ sim first_file.txt second_file.txt # compare two files
