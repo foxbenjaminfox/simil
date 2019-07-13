@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="sim-cli",
+    name="simil",
     version="0.0.1",
     author="Benjamin Fox",
     author_email="foxbenjaminfox@gmail.com",
@@ -22,5 +22,5 @@ setuptools.setup(
         "spacy",
         "en_vectors_web_lg @ https://github.com/explosion/spacy-models/releases/download/en_vectors_web_lg-2.1.0/en_vectors_web_lg-2.1.0.tar.gz#egg=en_vectors_web_lg-2.1.0",
     ],
-    entry_points={"console_scripts": ["sim=sim_cli:main"]},
+    entry_points={"console_scripts": ["simil=simil:main"]},
 )
