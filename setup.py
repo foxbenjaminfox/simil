@@ -1,15 +1,15 @@
 import setuptools
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+with open("README.md", "r") as readme:
+    LONG_DESCRIPTION = readme.read()
 
 setuptools.setup(
     name="simil",
-    version="0.0.1",
+    version="0.0.2",
     author="Benjamin Fox",
     author_email="foxbenjaminfox@gmail.com",
     description="CLI for semantic string similarity",
-    long_description=long_description,
+    long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     url="https://github.com/foxbenjaminfox/string-similarity-cli",
     packages=setuptools.find_packages(),
