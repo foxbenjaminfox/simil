@@ -1,17 +1,16 @@
-import os
-import sys
 import atexit
+import os
 import signal
-import rpyc
+import sys
 import time
-
-from rpyc.utils.server import ThreadedServer
-
 from functools import lru_cache
 from threading import Thread
 
-from .version import version
+import rpyc
+from rpyc.utils.server import ThreadedServer
+
 from .cli_args import args
+from .version import version
 
 
 def server(socket_path, *, load=False):
@@ -27,6 +26,12 @@ def server(socket_path, *, load=False):
 
 
 class SimilarityServer(rpyc.Service):
+    spacy_models = [
+        "en_vectors_web_lg",
+        "en_core_web_lg",
+        "en_core_web_md",
+    ]
+
     def __init__(self, *, load=False):
         self.active()
         self.loaded = False
@@ -40,10 +45,23 @@ class SimilarityServer(rpyc.Service):
         if self.loaded:
             return
 
+        self._nlp = self._load_spacy_model()
+        self.loaded = True
+
+    def _load_spacy_model(self):
         import spacy
 
-        self._nlp = spacy.load("en_vectors_web_lg")
-        self.loaded = True
+        for model in self.spacy_models:
+            try:
+                loaded_model = spacy.load(model)
+            except IOError as e:
+                continue
+            return loaded_model
+
+        raise FileNotFoundError(
+            "No spacy vector model found. "
+            "Try running `python3 -m spacy download en_vectors_web_lg`. "
+            "(Or you can try with `en_core_web_lg` or `en_core_web_md`.)")
 
     def active(self):
         self.last_active = time.time()
@@ -54,7 +72,9 @@ class SimilarityServer(rpyc.Service):
 
     def exposed_similarity(self, client_version, first, second):
         if client_version != version:
-            raise ValueError("Version mismatch between client and server: try restarting server with `sim -k`.")
+            raise ValueError(
+                "Version mismatch between client and server: try restarting the server with `simil -k`."
+            )
 
         self.load()
         self.active()
@@ -89,7 +109,6 @@ def daemonize():
     os.close(0)
     os.close(1)
     os.close(2)
-
     os.chdir("/")
     os.setsid()
     os.umask(0)

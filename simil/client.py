@@ -80,7 +80,11 @@ def kill_server(socket_path):
         print("Could not connect to server", file=sys.stderr)
         sys.exit(1)
 
-    conn.root.kill()
+    try:
+        conn.root.kill()
+    except EOFError:
+        # Expected, if we kill the server.
+        pass
 
 def check_no_args(args):
     if len(args.file) > 0:
